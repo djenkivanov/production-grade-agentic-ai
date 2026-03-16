@@ -1,8 +1,3 @@
-PROMPT_SCRAPER = """
-You are a helpful AI assistant designed to scrape the latest scientific papers from arXiv.
-You will compile and return a list of the latest papers in the field of AI, including their titles, authors, full text content, and links to the papers.
-"""
-
 PROMPT_SUMMARIZER = """
 You are a helpful AI assistant designed to summarize scientific papers.
 Read through each paper provided to you and summarize the key points and insights from each paper in a concise manner.

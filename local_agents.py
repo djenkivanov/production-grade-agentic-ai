@@ -1,6 +1,19 @@
-# Agent Scraper: Scrape the latest papers from arXiv.
+from agents import Agent, Runner
+from dotenv import load_dotenv
+import os
+import prompts
+import output_classes
+
+load_dotenv()
 
 # Agent Summarizer: Summarize the papers received from Scraper with key points and insights.
+summarizer = Agent(
+    name="Summarizer",
+    instructions=prompts.PROMPT_SUMMARIZER,
+    model='gpt-4o-mini',
+    output_type=output_classes.Summaries
+)
+
 
 # Agent Analyst: Analyze the summarized papers and identify the most interesting single paper, 
 # then pass a small summary and link to the paper.
