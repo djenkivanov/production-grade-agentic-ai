@@ -22,6 +22,22 @@ def get_papers(category="cs.AI", max_results=10) -> output_classes.Papers:
         
     return papers_obj
 
+
+def format_report_to_markdown(report: output_classes.Report) -> str:
+    return f"""# {report.title}
+
+**Authors**: {', '.join(report.authors)}
+**Published**: {report.published}
+**arXiv ID**: {report.arxiv_id}
+**URL**: {report.url}
+
+## Abstract
+{report.abstract}
+
+## Report
+{report.report}
+"""
+
 if __name__ == "__main__":
     papers = get_papers()
     print(papers)

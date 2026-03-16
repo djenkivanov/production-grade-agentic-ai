@@ -1,26 +1,54 @@
-from agents import Agent, Runner
+from agents import Agent, ModelSettings
 from dotenv import load_dotenv
-import os
 import prompts
 import output_classes
+import agent_tools
 
 load_dotenv()
 
-# Agent Summarizer: Summarize the papers received from Scraper with key points and insights.
-summarizer = Agent(
-    name="Summarizer",
-    instructions=prompts.PROMPT_SUMMARIZER,
+# Agent Analyst: Analyze the summarized papers and identify the most interesting single paper, 
+# then pass the most interesting paper back.
+analyst = Agent(
+    name="Analyst",
+    instructions=prompts.ANALYST,
     model='gpt-4o-mini',
-    output_type=output_classes.Summaries
+    output_type=output_classes.Paper
 )
 
+# 3 reporter agents, each using different models (in practice this would be different LLM providers entirely, but for simplicity
+# we'll different models from the same provider), that will each analyze the paper and write a report.
 
-# Agent Analyst: Analyze the summarized papers and identify the most interesting single paper, 
-# then pass a small summary and link to the paper.
+reporter_gpt_4o_mini = Agent(
+    name="Reporter GPT-4o Mini",
+    instructions=prompts.REPORTER,
+    model='gpt-4o-mini',
+    tools=[agent_tools.get_paper_contents],
+    model_settings=ModelSettings(temperature=0.7, max_tokens=3000),
+    output_type=output_classes.Report
+)
 
-# Agent Ensembler: Using the link to the paper, extract the full text and infer multiple LLMs to analyze the paper and write a 
-# comprehensive summary of the paper, including key points, insights, and potential implications for the field.
+reporter_gpt_5_4 = Agent(
+    name="Reporter GPT-5.4",
+    instructions=prompts.REPORTER,
+    model='gpt-5.4',
+    tools=[agent_tools.get_paper_contents],
+    model_settings=ModelSettings(temperature=0.7, max_tokens=3000),
+    output_type=output_classes.Report
+)
 
-# Agent ResponsibleAgent: Analyze the summaries provided from the different LLMs and write a final comprehensive summary of the paper,
-# while removing biased, hallucinated or inaccurate information and ensuring final summary is accurate and unbiased by cross-referencing
-# the summaries provided by the different LLMs and keeping only the most accurate and reliable information.
+reporter_gpt_5_mini = Agent(
+    name="Reporter GPT-5-mini",
+    instructions=prompts.REPORTER,
+    model='gpt-5-mini',
+    tools=[agent_tools.get_paper_contents],
+    model_settings=ModelSettings(max_tokens=3000),
+    output_type=output_classes.Report
+)
+
+# Agent ReasoningAgent: Analyze and refine the final report
+reasoning_agent = Agent(
+    name="Reasoning Agent",
+    instructions=prompts.REASONING_AGENT,
+    model='gpt-4o-mini',
+    output_type=output_classes.Report
+)

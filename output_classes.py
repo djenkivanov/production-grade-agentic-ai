@@ -11,10 +11,12 @@ class Paper(BaseModel):
 class Papers(BaseModel):
     papers: list[Paper]
 
-class Summary(BaseModel):
-    summary: str
+class Report(BaseModel):
+    title: str
+    authors: list[str]
+    abstract: str
+    url: str
     arxiv_id: str
-
-class Summaries(BaseModel):
-    summaries: list[Summary]
+    published: str
+    report: str
     
