@@ -3,3 +3,6 @@ python-dotenv
 pydantic
 arxiv
 pymupdf
+mcp
+uvicorn
+fastapi

@@ -50,5 +50,6 @@ reasoning_agent = Agent(
     name="Reasoning Agent",
     instructions=prompts.REASONING_AGENT,
     model='gpt-4o-mini',
+    model_settings=ModelSettings(max_tokens=3000),
     output_type=output_classes.Report
 )
