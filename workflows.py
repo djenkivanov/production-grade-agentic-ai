@@ -4,22 +4,24 @@ from agents import Runner
 import local_agents
 
 async def build_latest_report():
-    return {"Working": "as intended"}
     papers: output_classes.Papers = functions.get_papers()
 
     interesting_paper = await Runner.run(local_agents.analyst, input=papers.model_dump_json())
 
     reports = [
-        await Runner.run(local_agents.reporter_gpt_4o_mini, input=interesting_paper.final_output.model_dump()),
-        await Runner.run(local_agents.reporter_gpt_5_4, input=interesting_paper.final_output.model_dump()),
-        await Runner.run(local_agents.reporter_gpt_5_mini, input=interesting_paper.final_output.model_dump())
+        await Runner.run(local_agents.reporter_gpt_4o_mini, input=str(interesting_paper)),
+        await Runner.run(local_agents.reporter_gpt_5_4, input=str(interesting_paper)),
+        await Runner.run(local_agents.reporter_gpt_5_mini, input=str(interesting_paper))
     ]
 
-    reasoned_report = await Runner.run(local_agents.reasoning_agent, input=[report.final_output.model_dump() for report in reports])
+    reasoned_report = await Runner.run(local_agents.reasoning_agent, input=str(reports))
     
     formatted_report = functions.format_report_to_markdown(reasoned_report.final_output)
+
+    path = functions.save_report_in_markdown(formatted_report)
     
-    return formatted_report
+    return path
+
 
 if __name__ == "__main__":
     import asyncio

@@ -26,10 +26,10 @@ def get_papers(category="cs.AI", max_results=10) -> output_classes.Papers:
 def format_report_to_markdown(report: output_classes.Report) -> str:
     return f"""# {report.title}
 
-**Authors**: {', '.join(report.authors)}
-**Published**: {report.published}
-**arXiv ID**: {report.arxiv_id}
-**URL**: {report.url}
+**Authors**: {', '.join(report.authors)}  
+**Published**: {report.published}  
+**arXiv ID**: {report.arxiv_id}  
+**URL**: {report.url}  
 
 ## Abstract
 {report.abstract}
@@ -37,6 +37,11 @@ def format_report_to_markdown(report: output_classes.Report) -> str:
 ## Report
 {report.report}
 """
+
+def save_report_in_markdown(md_report: str, path: str = "AI_Paper_Report.md") -> str:
+    with open(path, "w", encoding="utf-8") as f:
+        f.write(md_report)
+    return path
 
 if __name__ == "__main__":
     papers = get_papers()
