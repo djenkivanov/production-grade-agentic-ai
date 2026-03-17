@@ -38,11 +38,6 @@ def format_report_to_markdown(report: output_classes.Report) -> str:
 {report.report}
 """
 
-def save_report_in_markdown(md_report: str, path: str = "AI_Paper_Report.md") -> str:
-    with open(path, "w", encoding="utf-8") as f:
-        f.write(md_report)
-    return path
-
 if __name__ == "__main__":
     papers = get_papers()
     print(papers)

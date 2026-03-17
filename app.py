@@ -9,8 +9,6 @@ app = FastAPI()
 async def root():
     return {"message": "Hello World"}
 
-@app.get("/latest-report")
+@app.get("/report-latest-papers")
 async def latest_report():
-    path = await workflows.build_latest_report()
-    filename = f"AI_Paper_Report_{datetime.datetime.now().strftime('%Y-%m-%d_%H-%M-%S')}.md"
-    return FileResponse(path, media_type="text/markdown", filename=filename)
+    return await workflows.report_latest_papers()
