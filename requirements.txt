@@ -3,6 +3,7 @@ python-dotenv
 pydantic
 arxiv
 pymupdf
-mcp
+fastmcp[tasks]
 uvicorn
 fastapi
+ngrok

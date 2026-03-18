@@ -1,10 +1,10 @@
 import arxiv
 import output_classes
 
-def get_papers(category="cs.AI", max_results=10) -> output_classes.Papers:
+def get_papers(category="cs.AI", papers_count=10) -> output_classes.Papers:
     search = arxiv.Search(
         query=f"cat:{category}",
-        max_results=max_results,
+        max_results=papers_count,
         sort_by=arxiv.SortCriterion.SubmittedDate
     )
 
