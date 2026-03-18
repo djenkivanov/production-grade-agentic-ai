@@ -1,16 +1,16 @@
 import arxiv
-import output_classes
+import custom_classes
 
-def get_papers(category="cs.AI", papers_count=10) -> output_classes.Papers:
+def get_papers(rr: custom_classes.ReportRequest) -> custom_classes.Papers:
     search = arxiv.Search(
-        query=f"cat:{category}",
-        max_results=papers_count,
+        query=f"cat:{rr.category}",
+        max_results=rr.papers_count,
         sort_by=arxiv.SortCriterion.SubmittedDate
     )
 
-    papers_obj: output_classes.Papers = output_classes.Papers(papers=[])
+    papers_obj: custom_classes.Papers = custom_classes.Papers(papers=[])
     for result in search.results():
-        paper: output_classes.Paper = output_classes.Paper(
+        paper: custom_classes.Paper = custom_classes.Paper(
             title=result.title,
             authors=[author.name for author in result.authors],
             abstract=result.summary,
@@ -23,7 +23,7 @@ def get_papers(category="cs.AI", papers_count=10) -> output_classes.Papers:
     return papers_obj
 
 
-def format_report_to_markdown(report: output_classes.Report) -> str:
+def format_report_to_markdown(report: custom_classes.Report) -> str:
     return f"""# {report.title}
 
 **Authors**: {', '.join(report.authors)}  
@@ -37,7 +37,3 @@ def format_report_to_markdown(report: output_classes.Report) -> str:
 ## Report
 {report.report}
 """
-
-if __name__ == "__main__":
-    papers = get_papers()
-    print(papers)

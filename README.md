@@ -8,7 +8,9 @@ The goal of this project is to implement best practices that are commony used in
 - OpenAI Agents SDK
 - Pydantic
 - FastAPI
-- MCP Server
+- Ngrok
+- MCP
+- LM Studio (Local LLMs)
 - Docker
 - Kubernetes
 

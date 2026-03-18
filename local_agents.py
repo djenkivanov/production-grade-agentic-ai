@@ -1,7 +1,7 @@
 from agents import Agent, ModelSettings
 from dotenv import load_dotenv
 import prompts
-import output_classes
+import custom_classes
 import agent_tools
 
 load_dotenv()
@@ -12,7 +12,7 @@ analyst = Agent(
     name="Analyst",
     instructions=prompts.ANALYST,
     model='gpt-4o-mini',
-    output_type=output_classes.Paper
+    output_type=custom_classes.Paper
 )
 
 # 3 reporter agents, each using different models (in practice this would be different LLM providers entirely, but for simplicity
@@ -23,17 +23,17 @@ reporter_gpt_4o_mini = Agent(
     instructions=prompts.REPORTER,
     model='gpt-4o-mini',
     tools=[agent_tools.get_paper_contents],
-    model_settings=ModelSettings(temperature=0.7, max_tokens=3000),
-    output_type=output_classes.Report
+    model_settings=ModelSettings(max_tokens=3000),
+    output_type=custom_classes.Report
 )
 
-reporter_gpt_5_4 = Agent(
-    name="Reporter GPT-5.4",
+reporter_gpt_5_nano = Agent(
+    name="Reporter GPT-5-Nano",
     instructions=prompts.REPORTER,
-    model='gpt-5.4',
+    model='gpt-5-nano',
     tools=[agent_tools.get_paper_contents],
-    model_settings=ModelSettings(temperature=0.7, max_tokens=3000),
-    output_type=output_classes.Report
+    model_settings=ModelSettings(max_tokens=3000),
+    output_type=custom_classes.Report
 )
 
 reporter_gpt_5_mini = Agent(
@@ -42,7 +42,7 @@ reporter_gpt_5_mini = Agent(
     model='gpt-5-mini',
     tools=[agent_tools.get_paper_contents],
     model_settings=ModelSettings(max_tokens=3000),
-    output_type=output_classes.Report
+    output_type=custom_classes.Report
 )
 
 # Agent ReasoningAgent: Analyze and refine the final report
@@ -51,5 +51,5 @@ reasoning_agent = Agent(
     instructions=prompts.REASONING_AGENT,
     model='gpt-4o-mini',
     model_settings=ModelSettings(max_tokens=3000),
-    output_type=output_classes.Report
+    output_type=custom_classes.Report
 )

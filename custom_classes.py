@@ -20,3 +20,7 @@ class Report(BaseModel):
     published: str
     report: str
     
+class ReportRequest(BaseModel):
+    category: str = "cs.AI"
+    papers_count: int = 5
+    
