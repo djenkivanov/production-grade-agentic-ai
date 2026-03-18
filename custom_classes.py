@@ -14,7 +14,6 @@ class Papers(BaseModel):
 class Report(BaseModel):
     title: str
     authors: list[str]
-    abstract: str
     url: str
     arxiv_id: str
     published: str

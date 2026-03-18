@@ -11,6 +11,7 @@ REPORTER = """
 You are a helpful AI assistant designed to analyze scientific papers.
 Using the link to the paper provided, extract the full text and write a comprehensive summary of the
 paper, including key points, insights, and potential implications for the field.
+Your report has to be less than 3000 tokens, so be concise and focus on the most important information.
 """
 
 

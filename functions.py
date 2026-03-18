@@ -1,5 +1,8 @@
+import json
 import arxiv
 import custom_classes
+import requests
+import fitz
 
 def get_papers(rr: custom_classes.ReportRequest) -> custom_classes.Papers:
     search = arxiv.Search(
@@ -31,9 +34,25 @@ def format_report_to_markdown(report: custom_classes.Report) -> str:
 **arXiv ID**: {report.arxiv_id}  
 **URL**: {report.url}  
 
-## Abstract
-{report.abstract}
-
 ## Report
 {report.report}
 """
+
+def get_paper_contents(link: str) -> str:  
+    link = link.replace("abs", "pdf") + ".pdf"
+    
+    response = requests.get(link)
+    doc = fitz.open(stream=response.content, filetype="pdf")
+    
+    text = ""
+    
+    for page in doc:
+        text += str(page.get_text())
+    
+    doc.close()
+    return text
+
+def get_arxiv_categories() -> str:
+    with open("arxiv_cs_cat.json", "r") as f:
+        categories = json.load(f)
+    return json.dumps(categories, indent=4)
