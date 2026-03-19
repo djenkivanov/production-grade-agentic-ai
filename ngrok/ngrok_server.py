@@ -1,9 +1,12 @@
 import ngrok
 import time
-import dotenv
 import os
 
-dotenv.load_dotenv()
+# production or dev check
+if os.getenv("ENV") != "production":
+    from dotenv import load_dotenv
+    load_dotenv()
+
 token = os.getenv("NGROK_AUTHTOKEN")
 
 listener = ngrok.forward("localhost:9000", authtoken=token)

@@ -1,9 +1,12 @@
 from agents import Agent, ModelSettings
-from dotenv import load_dotenv
 import prompts
 import custom_classes
+import os
 
-load_dotenv()
+# production or dev check
+if os.getenv("ENV") != "production":
+    from dotenv import load_dotenv
+    load_dotenv()
 
 # Agent Analyst: Analyze the summarized papers and identify the most interesting single paper, 
 # then pass the most interesting paper back.

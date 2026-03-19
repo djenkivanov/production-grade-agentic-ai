@@ -1,9 +1,0 @@
-openai-agents
-python-dotenv
-pydantic
-arxiv
-pymupdf
-fastmcp[tasks]
-uvicorn
-fastapi
-ngrok
