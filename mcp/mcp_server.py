@@ -1,6 +1,5 @@
-from functions import get_arxiv_categories
 from fastmcp import FastMCP
-import json
+from functions import valid_category
 import httpx
 
 local_api_url = "http://localhost:8000"
@@ -9,18 +8,13 @@ mcp = FastMCP("Latest Computer Science Papers Analysis")
 @mcp.tool()
 async def start_paper_analysis(category: str = "cs.AI", papers_count: int = 5) -> str:
     f"""
-    Start a background job for agents to analyze computer science papers.
-    
-    Valid categories:
-    {get_arxiv_categories()}
-    
-    Use the category code (e.g., 'cs.AI') and specify the number of papers to analyze (default is 5).
+    Start a background job for agents to analyze computer science papers.    
+    Use the category code (e.g., 'cs.AI', 'cs.CV') and specify the number of papers to analyze.
     """
-    with open("arxiv_cs_cat.json", "r") as f:
-        categories = json.load(f)
-    
-    if category not in categories.values():
-        raise ValueError(f"Category '{category}' not found. Available categories: {', '.join(categories.values())}")
+    try:
+        valid_category(category)
+    except ValueError as e:
+        raise ValueError(str(e))
         
     async with httpx.AsyncClient() as client:
         post_resp = await client.post(

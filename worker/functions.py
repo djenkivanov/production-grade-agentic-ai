@@ -52,7 +52,10 @@ def get_paper_contents(link: str) -> str:
     doc.close()
     return text
 
-def get_arxiv_categories() -> str:
+def valid_category(category: str) -> bool:
     with open("arxiv_cs_cat.json", "r") as f:
         categories = json.load(f)
-    return json.dumps(categories, indent=4)
+    
+    if category not in categories.values():
+        raise ValueError(f"Category '{category}' not found. Available categories: {', '.join(categories.values())}")
+    return True
