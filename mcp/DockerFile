@@ -9,4 +9,4 @@ COPY mcp /app/mcp
 
 EXPOSE 9000
 
-CMD ["python", "-m", "mcp.mcp_server.py"]
+CMD ["python", "-m", "mcp.mcp_server"]

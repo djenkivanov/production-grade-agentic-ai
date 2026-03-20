@@ -7,5 +7,5 @@ fastmcp
 uvicorn
 fastapi
 ngrok
-psycopg2
+psycopg2-binary
 sqlalchemy

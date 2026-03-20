@@ -5,8 +5,6 @@ import local_agents
 import asyncio
 import json
 
-jobs: dict[str, dict] = {}
-
 async def report_latest_papers(rr: ReportRequest) -> str:
     papers: Papers = await asyncio.to_thread(get_papers, rr=rr)
     
@@ -28,14 +26,3 @@ async def report_latest_papers(rr: ReportRequest) -> str:
     formatted_report = format_report_to_markdown(reasoned_report.final_output)
     
     return formatted_report
-
-
-async def register_report_job(job_id: str, rr: ReportRequest):
-    jobs[job_id]["status"] = "running"
-    try:
-        result = await report_latest_papers(rr)
-        jobs[job_id]["status"] = "completed"
-        jobs[job_id]["result"] = result
-    except Exception as e:
-        jobs[job_id]["status"] = "failed"
-        jobs[job_id]["error"] = str(e)

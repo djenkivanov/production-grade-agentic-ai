@@ -2,7 +2,7 @@ import time
 from sqlalchemy import create_engine, text
 import os
 import redis.asyncio as redis
-from workflows import register_report_job
+from workflows import report_latest_papers
 from common.custom_classes import ReportRequest
 import asyncio
 
@@ -38,7 +38,7 @@ async def process_job(job_id: str):
         rr = ReportRequest(category=category, papers_count=papers_count)
         
         try:
-            await register_report_job(job_id, rr)
+            await report_latest_papers(rr)
             with engine.begin() as conn:
                 conn.execute(
                     text("UPDATE jobs SET status = 'completed' WHERE id = :job_id"),
@@ -50,6 +50,45 @@ async def process_job(job_id: str):
                     text("UPDATE jobs SET status = 'failed', error = :error WHERE id = :job_id"),
                     {"job_id": job_id, "error": str(e)}
                 )
+
+
+def queue_report_job(job_id: str):
+    redis_client.rpush("job_queue", job_id)
+
+    
+def store_report_job(job_id: str, rr: ReportRequest):
+    with engine.connect() as conn:
+        conn.execute(
+            text("""
+                INSERT INTO jobs (id, status, category, papers_count)
+                VALUES (:id, :status, :category, :papers_count)
+            """),
+            {
+                "id": job_id,
+                "status": "queued",
+                "category": rr.category,
+                "papers_count": rr.papers_count
+            }
+        )
+
+
+def get_report_job(job_id: str):
+    with engine.connect() as conn:
+        row = conn.execute(
+            text("SELECT id, status, result, error FROM jobs WHERE id = :job_id"),
+            {"job_id": job_id}
+        ).fetchone()
+        
+        if row is None:
+            return None
+        
+        return {
+            "id": row[0],
+            "status": row[1],
+            "result": row[2],
+            "error": row[3]
+        }
+
 
 async def loop() -> None:
     while True:
