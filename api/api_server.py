@@ -2,7 +2,7 @@ from fastapi import FastAPI, HTTPException
 import asyncio
 import uuid
 import workflows
-import custom_classes
+from common.custom_classes import ReportRequest
 
 
 app = FastAPI()
@@ -13,7 +13,7 @@ async def root():
 
 
 @app.post("/reports")
-async def create_report(rr: custom_classes.ReportRequest):
+async def create_report(rr: ReportRequest):    
     job_id = str(uuid.uuid4())
 
     workflows.jobs[job_id] = {

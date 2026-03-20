@@ -1,4 +1,4 @@
-from pydantic import BaseModel
+from pydantic import BaseModel, field_validator
 
 class Paper(BaseModel):
     title: str
@@ -23,3 +23,8 @@ class ReportRequest(BaseModel):
     category: str = "cs.AI"
     papers_count: int = 5
     
+    @field_validator("category")
+    @classmethod
+    def validate_category(cls, category):
+        from common.functions import valid_category
+        return valid_category(category)

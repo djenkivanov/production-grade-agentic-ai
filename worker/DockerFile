@@ -7,8 +7,4 @@ RUN pip install --no-cache-dir -r requirements.txt
 
 COPY . /app
 
-RUN pip install --no-cache-dir ngrok
-
-EXPOSE 9000
-
-CMD ["python", "mcp_server.py"]
+CMD ["python", "job_executer.py"]

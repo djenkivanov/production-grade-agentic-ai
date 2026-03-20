@@ -1,5 +1,4 @@
 from fastmcp import FastMCP
-from functions import valid_category
 import httpx
 
 local_api_url = "http://localhost:8000"
@@ -7,21 +6,15 @@ mcp = FastMCP("Latest Computer Science Papers Analysis")
 
 @mcp.tool()
 async def start_paper_analysis(category: str = "cs.AI", papers_count: int = 5) -> str:
-    f"""
+    """
     Start a background job for agents to analyze computer science papers.    
     Use the category code (e.g., 'cs.AI', 'cs.CV') and specify the number of papers to analyze.
-    """
-    try:
-        valid_category(category)
-    except ValueError as e:
-        raise ValueError(str(e))
-        
+    """        
     async with httpx.AsyncClient() as client:
         post_resp = await client.post(
             f"{local_api_url}/reports", 
             json={"category": category, "papers_count": papers_count}
         )
-    
     return post_resp.text
         
 

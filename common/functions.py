@@ -1,19 +1,19 @@
 import json
 import arxiv
-import custom_classes
+from common.custom_classes import Paper, Report, Papers, ReportRequest
 import requests
 import fitz
 
-def get_papers(rr: custom_classes.ReportRequest) -> custom_classes.Papers:
+def get_papers(rr: ReportRequest) -> Papers:
     search = arxiv.Search(
         query=f"cat:{rr.category}",
         max_results=rr.papers_count,
         sort_by=arxiv.SortCriterion.SubmittedDate
     )
 
-    papers_obj: custom_classes.Papers = custom_classes.Papers(papers=[])
+    papers_obj: Papers = Papers(papers=[])
     for result in search.results():
-        paper: custom_classes.Paper = custom_classes.Paper(
+        paper: Paper = Paper(
             title=result.title,
             authors=[author.name for author in result.authors],
             abstract=result.summary,
@@ -26,7 +26,7 @@ def get_papers(rr: custom_classes.ReportRequest) -> custom_classes.Papers:
     return papers_obj
 
 
-def format_report_to_markdown(report: custom_classes.Report) -> str:
+def format_report_to_markdown(report: Report) -> str:
     return f"""# {report.title}
 
 **Authors**: {', '.join(report.authors)}  
@@ -52,10 +52,11 @@ def get_paper_contents(link: str) -> str:
     doc.close()
     return text
 
-def valid_category(category: str) -> bool:
-    with open("arxiv_cs_cat.json", "r") as f:
-        categories = json.load(f)
-    
-    if category not in categories.values():
-        raise ValueError(f"Category '{category}' not found. Available categories: {', '.join(categories.values())}")
-    return True
+# load once at startup
+with open("arxiv_cs_cat.json", "r") as f:
+        ARXIV_CS_CATEGORIES = json.load(f).values()
+
+def valid_category(category: str) -> str:
+    if category not in ARXIV_CS_CATEGORIES:
+        raise ValueError(f"Category '{category}' not found. Available categories: {', '.join(ARXIV_CS_CATEGORIES)}")
+    return category

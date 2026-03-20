@@ -1,5 +1,5 @@
-import functions
-import custom_classes
+import common.functions as functions
+from common.custom_classes import ReportRequest, Papers, Paper
 from agents import Runner
 import local_agents
 import asyncio
@@ -7,11 +7,11 @@ import json
 
 jobs: dict[str, dict] = {}
 
-async def report_latest_papers(rr: custom_classes.ReportRequest) -> str:
-    papers: custom_classes.Papers = await asyncio.to_thread(functions.get_papers, rr=rr)
+async def report_latest_papers(rr: ReportRequest) -> str:
+    papers: Papers = await asyncio.to_thread(functions.get_papers, rr=rr)
     
     interesting_paper_result = await Runner.run(local_agents.analyst, input=papers.model_dump_json())
-    interesting_paper_obj: custom_classes.Paper = interesting_paper_result.final_output
+    interesting_paper_obj: Paper = interesting_paper_result.final_output
     
     paper_contents = functions.get_paper_contents(interesting_paper_obj.url)
     
@@ -30,7 +30,7 @@ async def report_latest_papers(rr: custom_classes.ReportRequest) -> str:
     return formatted_report
 
 
-async def run_report_job(job_id: str, rr: custom_classes.ReportRequest):
+async def run_report_job(job_id: str, rr: ReportRequest):
     jobs[job_id]["status"] = "running"
     try:
         result = await report_latest_papers(rr)
@@ -39,8 +39,3 @@ async def run_report_job(job_id: str, rr: custom_classes.ReportRequest):
     except Exception as e:
         jobs[job_id]["status"] = "failed"
         jobs[job_id]["error"] = str(e)
-        
-if __name__ == "__main__":
-    # Example usage
-    rr = custom_classes.ReportRequest(category="cs.AI", papers_count=5)
-    asyncio.run(report_latest_papers(rr))

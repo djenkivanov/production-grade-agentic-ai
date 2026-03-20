@@ -1,6 +1,6 @@
 from agents import Agent, ModelSettings
 import prompts
-import custom_classes
+from common.custom_classes import Paper, Report
 import os
 
 # production or dev check
@@ -14,7 +14,7 @@ analyst = Agent(
     name="Analyst",
     instructions=prompts.ANALYST,
     model='gpt-4o-mini',
-    output_type=custom_classes.Paper
+    output_type=Paper
 )
 
 # 3 reporter agents, each using different models (in practice this would be different LLM providers entirely, but for simplicity
@@ -25,7 +25,7 @@ reporter_gpt_4o_mini = Agent(
     instructions=prompts.REPORTER,
     model='gpt-4o-mini',
     model_settings=ModelSettings(max_tokens=3000),
-    output_type=custom_classes.Report
+    output_type=Report
 )
 
 reporter_gpt_5_4_nano = Agent(
@@ -33,7 +33,7 @@ reporter_gpt_5_4_nano = Agent(
     instructions=prompts.REPORTER,
     model='gpt-5.4-nano',
     model_settings=ModelSettings(max_tokens=3000),
-    output_type=custom_classes.Report
+    output_type=Report
 )
 
 reporter_gpt_5_mini = Agent(
@@ -41,7 +41,7 @@ reporter_gpt_5_mini = Agent(
     instructions=prompts.REPORTER,
     model='gpt-5-mini',
     model_settings=ModelSettings(max_tokens=3000),
-    output_type=custom_classes.Report
+    output_type=Report
 )
 
 # Agent ReasoningAgent: Analyze and refine the final report
@@ -50,5 +50,5 @@ reasoning_agent = Agent(
     instructions=prompts.REASONING_AGENT,
     model='gpt-4o-mini',
     model_settings=ModelSettings(max_tokens=3000),
-    output_type=custom_classes.Report
+    output_type=Report
 )
