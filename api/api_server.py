@@ -24,7 +24,7 @@ async def create_report(rr: ReportRequest):
         "papers_count": rr.papers_count
     }
 
-    asyncio.create_task(workflows.run_report_job(job_id, rr))
+    asyncio.create_task(workflows.register_report_job(job_id, rr))
 
     return {
         "job_id": job_id,

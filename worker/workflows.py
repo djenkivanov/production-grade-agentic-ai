@@ -1,5 +1,5 @@
-import common.functions as functions
 from common.custom_classes import ReportRequest, Papers, Paper
+from common.functions import get_papers, format_report_to_markdown, get_paper_contents
 from agents import Runner
 import local_agents
 import asyncio
@@ -8,12 +8,12 @@ import json
 jobs: dict[str, dict] = {}
 
 async def report_latest_papers(rr: ReportRequest) -> str:
-    papers: Papers = await asyncio.to_thread(functions.get_papers, rr=rr)
+    papers: Papers = await asyncio.to_thread(get_papers, rr=rr)
     
     interesting_paper_result = await Runner.run(local_agents.analyst, input=papers.model_dump_json())
     interesting_paper_obj: Paper = interesting_paper_result.final_output
     
-    paper_contents = functions.get_paper_contents(interesting_paper_obj.url)
+    paper_contents = get_paper_contents(interesting_paper_obj.url)
     
     reports = await asyncio.gather(
         Runner.run(local_agents.reporter_gpt_4o_mini, input=paper_contents),
@@ -25,12 +25,12 @@ async def report_latest_papers(rr: ReportRequest) -> str:
     
     reasoned_report = await Runner.run(local_agents.reasoning_agent, input=json.dumps(report_outputs, indent=4))
     
-    formatted_report = functions.format_report_to_markdown(reasoned_report.final_output)
+    formatted_report = format_report_to_markdown(reasoned_report.final_output)
     
     return formatted_report
 
 
-async def run_report_job(job_id: str, rr: ReportRequest):
+async def register_report_job(job_id: str, rr: ReportRequest):
     jobs[job_id]["status"] = "running"
     try:
         result = await report_latest_papers(rr)

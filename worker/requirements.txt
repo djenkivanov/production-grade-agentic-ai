@@ -2,3 +2,4 @@ openai-agents
 pydantic
 arxiv
 pymupdf
+psycopg2

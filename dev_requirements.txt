@@ -1,0 +1,11 @@
+openai-agents
+python-dotenv
+pydantic
+arxiv
+pymupdf
+fastmcp
+uvicorn
+fastapi
+ngrok
+psycopg2
+sqlalchemy
