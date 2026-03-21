@@ -53,7 +53,7 @@ def get_paper_contents(link: str) -> str:
     return text
 
 # load once at startup
-with open("arxiv_cs_cat.json", "r") as f:
+with open("common/arxiv_cs_cat.json", "r") as f:
         ARXIV_CS_CATEGORIES = json.load(f).values()
 
 def valid_category(category: str) -> str:

@@ -3,3 +3,5 @@ pydantic
 arxiv
 pymupdf
 psycopg2-binary
+sqlalchemy
+redis

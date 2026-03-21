@@ -2,6 +2,8 @@ import ngrok
 import time
 import os
 
+# this file is used for dev purposes only
+
 # production or dev check
 if os.getenv("ENV") != "production":
     from dotenv import load_dotenv

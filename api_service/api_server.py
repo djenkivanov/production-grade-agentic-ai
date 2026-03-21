@@ -1,8 +1,7 @@
-from fastapi import FastAPI, HTTPException
+from fastapi import FastAPI
 import uuid
 from common.custom_classes import ReportRequest
-from job_executor import queue_report_job, store_report_job, get_report_job
-
+from common.job_functions import store_report_job, queue_report_job, get_report_job
 
 app = FastAPI()
 
@@ -17,7 +16,7 @@ async def create_report(rr: ReportRequest):
     
     store_report_job(job_id, rr)
     
-    queue_report_job(job_id)
+    await queue_report_job(job_id)
 
     return {
         "job_id": job_id,

@@ -1,5 +1,5 @@
 from agents import Agent, ModelSettings
-import prompts
+import worker_service.prompts
 from common.custom_classes import Paper, Report
 import os
 
@@ -12,7 +12,7 @@ if os.getenv("ENV") != "production":
 # then pass the most interesting paper back.
 analyst = Agent(
     name="Analyst",
-    instructions=prompts.ANALYST,
+    instructions=worker_service.prompts.ANALYST,
     model='gpt-4o-mini',
     output_type=Paper
 )
@@ -22,7 +22,7 @@ analyst = Agent(
 
 reporter_gpt_4o_mini = Agent(
     name="Reporter GPT-4o Mini",
-    instructions=prompts.REPORTER,
+    instructions=worker_service.prompts.REPORTER,
     model='gpt-4o-mini',
     model_settings=ModelSettings(max_tokens=3000),
     output_type=Report
@@ -30,7 +30,7 @@ reporter_gpt_4o_mini = Agent(
 
 reporter_gpt_5_4_nano = Agent(
     name="Reporter GPT-5.4-Nano",
-    instructions=prompts.REPORTER,
+    instructions=worker_service.prompts.REPORTER,
     model='gpt-5.4-nano',
     model_settings=ModelSettings(max_tokens=3000),
     output_type=Report
@@ -38,7 +38,7 @@ reporter_gpt_5_4_nano = Agent(
 
 reporter_gpt_5_mini = Agent(
     name="Reporter GPT-5-mini",
-    instructions=prompts.REPORTER,
+    instructions=worker_service.prompts.REPORTER,
     model='gpt-5-mini',
     model_settings=ModelSettings(max_tokens=3000),
     output_type=Report
@@ -47,7 +47,7 @@ reporter_gpt_5_mini = Agent(
 # Agent ReasoningAgent: Analyze and refine the final report
 reasoning_agent = Agent(
     name="Reasoning Agent",
-    instructions=prompts.REASONING_AGENT,
+    instructions=worker_service.prompts.REASONING_AGENT,
     model='gpt-4o-mini',
     model_settings=ModelSettings(max_tokens=3000),
     output_type=Report

@@ -1,27 +1,27 @@
 from common.custom_classes import ReportRequest, Papers, Paper
 from common.functions import get_papers, format_report_to_markdown, get_paper_contents
 from agents import Runner
-import local_agents
+import worker_service.local_agents
 import asyncio
 import json
 
 async def report_latest_papers(rr: ReportRequest) -> str:
     papers: Papers = await asyncio.to_thread(get_papers, rr=rr)
     
-    interesting_paper_result = await Runner.run(local_agents.analyst, input=papers.model_dump_json())
+    interesting_paper_result = await Runner.run(worker_service.local_agents.analyst, input=papers.model_dump_json())
     interesting_paper_obj: Paper = interesting_paper_result.final_output
     
     paper_contents = get_paper_contents(interesting_paper_obj.url)
     
     reports = await asyncio.gather(
-        Runner.run(local_agents.reporter_gpt_4o_mini, input=paper_contents),
-        Runner.run(local_agents.reporter_gpt_5_4_nano, input=paper_contents),
-        Runner.run(local_agents.reporter_gpt_5_mini, input=paper_contents)
+        Runner.run(worker_service.local_agents.reporter_gpt_4o_mini, input=paper_contents),
+        Runner.run(worker_service.local_agents.reporter_gpt_5_4_nano, input=paper_contents),
+        Runner.run(worker_service.local_agents.reporter_gpt_5_mini, input=paper_contents)
     )
 
     report_outputs = [r.final_output.model_dump() for r in reports]
     
-    reasoned_report = await Runner.run(local_agents.reasoning_agent, input=json.dumps(report_outputs, indent=4))
+    reasoned_report = await Runner.run(worker_service.local_agents.reasoning_agent, input=json.dumps(report_outputs, indent=4))
     
     formatted_report = format_report_to_markdown(reasoned_report.final_output)
     
