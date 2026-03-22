@@ -32,25 +32,25 @@ async def process_job(job_id: str):
             {"job_id": job_id}
         ).fetchone()
         
-        if row is None:
-            return
+    if row is None:
+        return
+    
+    category, papers_count = row
+    rr = ReportRequest(category=category, papers_count=papers_count)
         
-        category, papers_count = row
-        rr = ReportRequest(category=category, papers_count=papers_count)
-        
-        try:
-            await report_latest_papers(rr)
-            with engine.begin() as conn:
-                conn.execute(
-                    text("UPDATE jobs SET status = 'completed' WHERE id = :job_id"),
-                    {"job_id": job_id}
-                )
-        except Exception as e:
-            with engine.begin() as conn:
-                conn.execute(
-                    text("UPDATE jobs SET status = 'failed', error = :error WHERE id = :job_id"),
-                    {"job_id": job_id, "error": str(e)}
-                )
+    try:
+        result = await report_latest_papers(rr)
+        with engine.begin() as conn:
+            conn.execute(
+                text("UPDATE jobs SET status = 'completed', result = :result, error = NULL WHERE id = :job_id"),
+                {"job_id": job_id, "result": result}
+            )
+    except Exception as e:
+        with engine.begin() as conn:
+            conn.execute(
+                text("UPDATE jobs SET status = 'failed', error = :error WHERE id = :job_id"),
+                {"job_id": job_id, "error": str(e)}
+            )
 
 
 async def loop() -> None:
