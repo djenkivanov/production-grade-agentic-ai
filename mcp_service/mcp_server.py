@@ -1,7 +1,11 @@
 from fastmcp import FastMCP
 import httpx
+import os
 
-local_api_url = "http://localhost:8000"
+if os.getenv("ENV") != "production":
+    API_URL = "http://localhost:8000"
+
+API_URL = os.environ["API_URL"]
 mcp = FastMCP("Latest Computer Science Papers Analysis")
 
 @mcp.tool()
@@ -12,7 +16,7 @@ async def start_paper_analysis(category: str = "cs.AI", papers_count: int = 5) -
     """        
     async with httpx.AsyncClient() as client:
         post_resp = await client.post(
-            f"{local_api_url}/reports", 
+            f"{API_URL}/reports", 
             json={"category": category, "papers_count": papers_count}
         )
     return post_resp.text
@@ -23,7 +27,7 @@ def get_job(job_id: str):
     """
     Get the status and result of a report generation job by its ID.
     """
-    response = httpx.get(f"{local_api_url}/reports/{job_id}")
+    response = httpx.get(f"{API_URL}/reports/{job_id}")
     
     if response.status_code == 404:
         raise ValueError(f"Job with ID '{job_id}' not found.")
@@ -33,4 +37,4 @@ def get_job(job_id: str):
     return response.json()
 
 if __name__ == "__main__":
-    mcp.run(transport="sse", port=9000)
+    mcp.run(transport="sse", host="0.0.0.0", port=9000)

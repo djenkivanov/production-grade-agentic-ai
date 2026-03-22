@@ -20,6 +20,7 @@ engine = create_engine(DB_URL)
 redis_client = redis.from_url(REDIS_URL, decode_responses=True)
 
 async def process_job(job_id: str):
+    print(f"Started working on job {job_id}")
     with engine.begin() as conn:
         conn.execute(
             text("UPDATE jobs SET status = 'running' WHERE id = :job_id"),
@@ -53,13 +54,16 @@ async def process_job(job_id: str):
 
 
 async def loop() -> None:
+    print("Started listening for jobs...")
     while True:
         result = await redis_client.blpop(QUEUE_NAME, timeout=1) # type: ignore
         if result is None:
             continue
+        print(f"BLPOP results: {result}")
 
         _, job_id = result
         await process_job(job_id)
 
 if __name__ == "__main__":
+    print("Gets here?")
     asyncio.run(loop())

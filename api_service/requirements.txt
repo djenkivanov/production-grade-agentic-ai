@@ -1,6 +1,7 @@
 fastapi
 uvicorn
 pydantic
+arxiv
 pymupdf
 sqlalchemy
 psycopg2-binary

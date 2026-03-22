@@ -15,8 +15,8 @@ async def report_latest_papers(rr: ReportRequest) -> str:
     
     reports = await asyncio.gather(
         Runner.run(worker_service.local_agents.reporter_gpt_4o_mini, input=paper_contents),
-        Runner.run(worker_service.local_agents.reporter_gpt_5_4_nano, input=paper_contents),
-        Runner.run(worker_service.local_agents.reporter_gpt_5_mini, input=paper_contents)
+        # Runner.run(worker_service.local_agents.reporter_gpt_5_4_nano, input=paper_contents),
+        # Runner.run(worker_service.local_agents.reporter_gpt_5_mini, input=paper_contents)
     )
 
     report_outputs = [r.final_output.model_dump() for r in reports]

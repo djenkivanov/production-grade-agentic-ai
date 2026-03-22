@@ -1,4 +1,4 @@
-from fastapi import FastAPI
+from fastapi import FastAPI, HTTPException
 import uuid
 from common.custom_classes import ReportRequest
 from common.job_functions import store_report_job, queue_report_job, get_report_job
@@ -26,4 +26,7 @@ async def create_report(rr: ReportRequest):
 
 @app.get("/reports/{job_id}")
 async def get_report(job_id: str):
-    return get_report_job(job_id)
+    job = get_report_job(job_id)
+    if job is None:
+        raise HTTPException(status_code=404, detail="Job not found")
+    return job
