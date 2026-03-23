@@ -6,3 +6,7 @@ pymupdf
 sqlalchemy
 psycopg2-binary
 redis
+opentelemetry-api
+opentelemetry-sdk
+opentelemetry-exporter-otlp
+opentelemetry-instrumentation-fastapi
