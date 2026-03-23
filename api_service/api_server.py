@@ -25,6 +25,7 @@ async def create_report(rr: ReportRequest):
         span.set_attribute("job.id", job_id)
         span.set_attribute("job.category", rr.category)
         span.set_attribute("job.papers_count", rr.papers_count)
+        span.set_attribute("component", "api")
         
         store_report_job(job_id, rr)
         span.add_event(f"job_{job_id}_stored_in_postgres")
@@ -40,7 +41,15 @@ async def create_report(rr: ReportRequest):
 
 @app.get("/reports/{job_id}")
 async def get_report(job_id: str):
-    job = get_report_job(job_id)
-    if job is None:
-        raise HTTPException(status_code=404, detail="Job not found")
-    return job
+    with tracer.start_as_current_span("get_report") as span:
+        span.set_attribute("job.id", job_id)
+        span.set_attribute("component", "api")
+        
+        job = get_report_job(job_id)
+        
+        if job is None:
+            span.set_attribute("job.found", False)
+            raise HTTPException(status_code=404, detail="Job not found")
+        
+        span.set_attribute("job.found", True)
+        return job
