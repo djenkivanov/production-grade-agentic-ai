@@ -28,10 +28,10 @@ async def create_report(rr: ReportRequest):
         span.set_attribute("component", "api")
         
         store_report_job(job_id, rr)
-        span.add_event(f"job_{job_id}_stored_in_postgres")
+        span.add_event("job_stored_in_postgres")
         
         await queue_report_job(job_id)
-        span.add_event(f"job_{job_id}_stored_in_redis")
+        span.add_event("job_stored_in_redis")
 
         return {
             "job_id": job_id,
