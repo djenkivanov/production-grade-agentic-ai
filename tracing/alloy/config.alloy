@@ -1,0 +1,16 @@
+otelcol.receiver.otlp "default" {
+  grpc {}
+  http {}
+  output {
+    traces = [otelcol.exporter.otlp.tempo.input]
+  }
+}
+
+otelcol.exporter.otlp "tempo" {
+  client {
+    endpoint = "tempo:4317"
+    tls {
+      insecure = true
+    }
+  }
+}

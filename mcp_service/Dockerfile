@@ -6,6 +6,7 @@ COPY mcp_service/requirements.txt /app/requirements.txt
 RUN pip install --no-cache-dir -r /app/requirements.txt
 
 COPY mcp_service /app/mcp_service
+COPY common /app/common
 
 EXPOSE 9000
 
