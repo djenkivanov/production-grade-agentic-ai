@@ -23,9 +23,50 @@ The pipeline is as follows:
 
 For visual learners, here's a diagram with the complete pipeline from request to finish:
 
-![](./diagrams/agent_pipeline.drawio.png)
+![](./img/agent_pipeline.drawio.png)
 
 *Diagram created [here](https://app.diagrams.net/)*
+
+## Tracing
+Tracing has been implemented throughout different tasks on the MPC, API, and backend workers to keep enable deeper debugging capabilities.
+
+Grafana/Alloy/Tempo was used alongside OpenTelemetry.
+
+The tracing process is as follows:
+- Create traces using OpenTelemetry.
+- Alloy receives the traces data and sends it to Tempo.
+- Tempo stores the traces.
+- Grafana can query Tempo and display/visualize the traces data.
+
+Here are some screenshots of my traces inside Grafana:
+[<img src="./img/trace_dashboard.png" height=300/>]()
+[<img src="./img/trace_inspect.png" height=300/>]()
+
+## Containerization
+All services have been packaged neatly in a `docker-compose.yaml` and this current repository is perfectly reproducable on your system.
+
+## Local deployment instructions
+Create a `.env` file and create the following variables:
+```
+OPENAI_API_KEY=
+NGROK_AUTHTOKEN=
+POSTGRES_USER=
+POSTGRES_PASSWORD=
+POSTGRES_DB=
+DB_URL=
+```
+Assign each variable's value correspondingly.
+
+Ensure you have docker installed.  
+After that just clone the repo and build the `docker-compose.yaml` file:  
+```
+docker-compose up --build
+```
+Use the Ngrok URL you're given in the container in your local LLM's MCP server config/json. 
+
+If all your `.env` variables were correctly assigned, then asking the LLM to start an analysis on X papers in category Y should produce a tool call to the MCP server.
+
+### *That's it!*
 
 ### Tech stack
 - Python

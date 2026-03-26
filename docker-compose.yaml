@@ -39,7 +39,7 @@ services:
       - redis
       - postgres
   redis:
-    image: redis:latest
+    image: redis:trixie
     ports:
       - "6379:6379"
 
@@ -56,7 +56,7 @@ services:
       - "5432:5432"
 
   ngrok:
-    image: ngrok/ngrok:latest
+    image: ngrok/ngrok:3
     command: http mcp:9000
     environment:
       NGROK_AUTHTOKEN: ${NGROK_AUTHTOKEN}
@@ -66,7 +66,7 @@ services:
       - mcp
 
   alloy:
-    image: grafana/alloy:latest
+    image: grafana/alloy:v1.14.2
     command:
       - run
       - /etc/alloy/config.alloy
@@ -88,7 +88,7 @@ services:
       - "3200:3200"
 
   grafana:
-    image: grafana/grafana:latest
+    image: grafana/grafana:12.4
     ports:
       - "3000:3000"
     depends_on:
