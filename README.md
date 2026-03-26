@@ -38,6 +38,8 @@ The tracing process is as follows:
 - Tempo stores the traces.
 - Grafana can query Tempo and display/visualize the traces data.
 
+![](./img/alloy-tempo-grafana.png)
+
 Here are some screenshots of my traces inside Grafana:
 [<img src="./img/trace_dashboard.png" height=300/>]()
 [<img src="./img/trace_inspect.png" height=300/>]()
